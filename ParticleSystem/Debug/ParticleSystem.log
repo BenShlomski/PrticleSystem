@@ -1,0 +1,14 @@
+﻿  main.cpp
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(34,128): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(38,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(61,22): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(61,16): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(74,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(85,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(91,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(133,32): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(181,82): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(193,85): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(193,62): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(193,39): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+  ParticleSystem.vcxproj -> C:\Users\Yonatan\source\repos\ParticleSystem\Debug\ParticleSystem.exe
