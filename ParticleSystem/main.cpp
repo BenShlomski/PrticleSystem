@@ -5,15 +5,17 @@
 #include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <cstdlib>
 #include "Particle.h"
 
-constexpr auto PARTICLE_COUNT = 50;
+constexpr auto PARTICLE_COUNT = 100;
+constexpr auto CIRCLE_VERTECIES = 32;
 
 constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
-constexpr auto PI = 3.1415926535897932384626433832795;
+
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
 
@@ -31,7 +33,7 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
     {
-        particle.randomizeParticle(10, 30, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {1, 1, 0}, {0, 0.01, 0});
+        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {500, 500, 0}, {0, -500, 0});
     }
 
     // randomize seed
@@ -65,14 +67,13 @@ int main(void)
     glMatrixMode(GL_MODELVIEW); // (default matrix mode) modelview matrix defines how your objects are transformed (meaning translation, rotation and scaling) in your world
     glLoadIdentity(); // same as above comment
 
-    glColor3ub(std::rand() % 256, std::rand() % 256, std::rand() % 256); // randomize circle color
-
     // disable v-sync
     glfwSwapInterval(0);
 
     // fps variables
     float lastTime = glfwGetTime();
     float timeStep = 0;
+    float previousFrameTime = lastTime;
     int nbFrames = 0;
 
     // Loop until the user closes the window
@@ -102,14 +103,9 @@ int main(void)
         }
 
         // change particle position and velocity
-        if (timeStep == 0)
-        {
-            updateParticles(particles, PARTICLE_COUNT, timeDifference);
-        }
-        else
-        {
-            updateParticles(particles, PARTICLE_COUNT, timeStep);
-        }
+        timeStep = currentTime - previousFrameTime;
+        previousFrameTime = currentTime;
+        updateParticles(particles, PARTICLE_COUNT, timeStep);
 
         // render
         drawParticles(particles, PARTICLE_COUNT);
@@ -130,7 +126,7 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfS
 {
     int numberOfVertices = numberOfSides + 2;
 
-    GLfloat twicePi = 2.0f * PI;
+    GLfloat twicePi = 2.0f * M_PI;
 
     GLfloat* circleVerticesX = new GLfloat[numberOfVertices];
     GLfloat* circleVerticesY = new GLfloat[numberOfVertices];
@@ -178,7 +174,7 @@ void updateParticles(Particle* particles, size_t particleCount, float timeStep)
 {
     for (size_t i = 0; i < particleCount; i++)
     {
-        particles[i].update(0.2777, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0});
+        particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0}, particles, particleCount);
     }
 }
 
@@ -191,6 +187,6 @@ void drawParticles(Particle* particles, size_t particleCount)
         particle = particles[i];
 
         glColor3ub(particle.getColor().x, particle.getColor().y, particle.getColor().z); // randomize circle color
-        drawCircle(particle.getPosition().x, particle.getPosition().y, particle.getPosition().z, particle.getRadius(), 32);
+        drawCircle(particle.getPosition().x, particle.getPosition().y, particle.getPosition().z, particle.getRadius(), CIRCLE_VERTECIES);
     }
 }
