@@ -48,17 +48,35 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 	m_position.z += m_velocity.z * timeStep;
 
 	// edge detection
-	if (m_position.x + m_radius > boundingBoxTopRightPoint.x || m_position.x - m_radius < boundingBoxBottomLeftPoint.x)
+	if (m_position.x > boundingBoxTopRightPoint.x)
 	{
 		m_velocity.x *= -1;
+		m_position.x = 2 * boundingBoxTopRightPoint.x - m_position.x;
 	}
-	if (m_position.y + m_radius > boundingBoxTopRightPoint.y || m_position.y - m_radius < boundingBoxBottomLeftPoint.y)
+	if (m_position.x < boundingBoxBottomLeftPoint.x)
+	{
+		m_velocity.x *= -1;
+		m_position.x = 2 * boundingBoxBottomLeftPoint.x - m_position.x;
+	}
+	if (m_position.y > boundingBoxTopRightPoint.y)
 	{
 		m_velocity.y *= -1;
+		m_position.y = 2 * boundingBoxTopRightPoint.y - m_position.y;
 	}
-	if (m_position.z + m_radius > boundingBoxTopRightPoint.z || m_position.z - m_radius < boundingBoxBottomLeftPoint.z)
+	if (m_position.y < boundingBoxBottomLeftPoint.y)
+	{
+		m_velocity.y *= -1;
+		m_position.y = 2 * boundingBoxBottomLeftPoint.y - m_position.y;
+	}
+	if (m_position.z > boundingBoxTopRightPoint.z)
 	{
 		m_velocity.z *= -1;
+		m_position.z = 2 * boundingBoxTopRightPoint.z - m_position.z;
+	}
+	if (m_position.z < boundingBoxBottomLeftPoint.z)
+	{
+		m_velocity.z *= -1;
+		m_position.z = 2 * boundingBoxBottomLeftPoint.z - m_position.z;
 	}
 
 	handleCollision(domainPtr, domainParticleCount);
@@ -80,7 +98,7 @@ void Particle::handleCollision(Particle* domainPtr, size_t domainParticleCount)
 
 		if (m_position.distance(particle.getPosition()) <= m_radius + particle.getRadius() && domainPtr + i != this)
 		{
-			// mark particles as havving collided
+			// mark particles as having collided
 			particle.setCollisionStatus(true);
 		
 			float particle1Velocity = m_velocity.distance({ 0,0,0 }); // lazy way to find scale

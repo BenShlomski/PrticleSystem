@@ -1,11 +1,36 @@
-﻿main.obj : error LNK2019: unresolved external symbol glfwInit referenced in function main
+﻿  glad.c
+  main.cpp
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.h(11,42): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(40,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(63,22): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(63,16): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(74,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(86,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(92,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(129,34): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(189,85): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(189,62): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(189,39): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+  Particle.cpp
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.h(11,42): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(21,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(32,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(37,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(86,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(87,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Particle.cpp(94,31): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+main.obj : error LNK2019: unresolved external symbol glfwInit referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function main
-main.obj : error LNK2019: unresolved external symbol glfwWindowHint referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwCreateWindow referenced in function main
-main.obj : error LNK2019: unresolved external symbol glfwDestroyWindow referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwWindowShouldClose referenced in function main
+main.obj : error LNK2019: unresolved external symbol glfwSetWindowShouldClose referenced in function "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPEAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol glfwSetWindowTitle referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwPollEvents referenced in function main
+main.obj : error LNK2019: unresolved external symbol glfwGetKey referenced in function "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPEAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol glfwGetTime referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function main
 main.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function main
-C:\Users\Yonatan\source\repos\ParticleSystem\libraries\lib\glfw3.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
-C:\Users\Yonatan\source\repos\ParticleSystem\x64\Debug\ParticleSystem.exe : fatal error LNK1120: 9 unresolved externals
+main.obj : error LNK2019: unresolved external symbol glfwSwapInterval referenced in function main
+C:\Users\danim\source\repos\PrticleSystem\libraries\lib\glfw3.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\danim\source\repos\PrticleSystem\x64\Debug\ParticleSystem.exe : fatal error LNK1120: 12 unresolved externals

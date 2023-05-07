@@ -6,6 +6,7 @@
 
 struct Coordinate {
 	float x, y, z;
+
 	Coordinate(float a, float b, float c) { this->x = a; this->y = b; this->z = c; }
 	Coordinate() { this->x = 0; this->y = 0; this->z = 0; }
 	int distance(Coordinate a) { return sqrt(pow((a.x - x), 2) + pow((a.y - y), 2) + pow((a.z - z), 2)); }

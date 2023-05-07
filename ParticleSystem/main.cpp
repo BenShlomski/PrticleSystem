@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include "Particle.h"
 
-constexpr auto PARTICLE_COUNT = 100;
+constexpr auto PARTICLE_COUNT = 50;
 constexpr auto CIRCLE_VERTECIES = 32;
 
 constexpr auto SCREEN_WIDTH = 1920;
@@ -33,7 +33,7 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
     {
-        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {500, 500, 0}, {0, -500, 0});
+        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {900, 900, 0}, {0, 0, 0});
     }
 
     // randomize seed
@@ -46,7 +46,7 @@ int main(void)
     }
 
     // Create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "FirstWindow", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "MainWindow", NULL, NULL);
 
     if (!window)
     {
