@@ -9,6 +9,7 @@
 #include <math.h>
 #include <cstdlib>
 #include "Particle.h"
+#include "BVH.h"
 
 constexpr auto PARTICLE_COUNT = 50;
 constexpr auto CIRCLE_VERTECIES = 32;
@@ -29,6 +30,7 @@ int main(void)
 {
     GLFWwindow* window;
     Particle particles[PARTICLE_COUNT];
+    BVH bvh = BVH(particles, PARTICLE_COUNT);
 
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
