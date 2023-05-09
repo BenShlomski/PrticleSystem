@@ -24,18 +24,20 @@ void BVH::Update(Particle* particleList, size_t particleCount)
 
     if (m_particleIndexArray != NULL)
     {
+        // this is the line. i am so done.
         delete[] m_particleIndexArray;
     }
 
     m_nodeTree = new BVHNode[2 * particleCount - 1];
-    if (m_particleIndexArray == NULL)
+    if (m_nodeTree == NULL)
     {
         return;
     }
+
 	m_particleIndexArray = new size_t[particleCount];
-    if (m_nodeTree == NULL)
+    if (m_particleIndexArray == NULL)
     {
-        delete[] m_particleIndexArray;
+        delete[] m_nodeTree;
         return;
     }
 
