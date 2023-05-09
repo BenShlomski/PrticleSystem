@@ -24,14 +24,18 @@ void BVH::Update(Particle* particleList, size_t particleCount)
 
     if (m_particleIndexArray != NULL)
     {
-        // TODO its this line that fucka my code fml my lafa:
         delete[] m_particleIndexArray;
     }
 
     m_nodeTree = new BVHNode[2 * particleCount - 1];
-	m_particleIndexArray = new size_t[particleCount];
-    if (m_nodeTree == NULL || m_particleIndexArray == NULL)
+    if (m_particleIndexArray == NULL)
     {
+        return;
+    }
+	m_particleIndexArray = new size_t[particleCount];
+    if (m_nodeTree == NULL)
+    {
+        delete[] m_particleIndexArray;
         return;
     }
 
