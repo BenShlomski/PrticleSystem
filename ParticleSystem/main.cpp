@@ -30,7 +30,8 @@ int main(void)
 {
     GLFWwindow* window;
     Particle particles[PARTICLE_COUNT];
-    BVH bvh = BVH(particles, PARTICLE_COUNT);
+    BVH bvh = BVH();
+    bvh.Update(particles, PARTICLE_COUNT);
 
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
@@ -103,6 +104,8 @@ int main(void)
             nbFrames = 0;
             lastTime += 1.0;
         }
+
+        bvh.Update(particles, PARTICLE_COUNT);
 
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;

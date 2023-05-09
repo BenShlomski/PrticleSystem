@@ -18,8 +18,9 @@ struct BVHNode
 class BVH
 {
 public:
-	BVH(Particle* particleList, size_t particleCount); // TODO change this later
+	BVH();
 	~BVH();
+    void Update(Particle* particleList, size_t particleCount);
 private:
     BVHNode* m_nodeTree;
     size_t* m_particleIndexArray;

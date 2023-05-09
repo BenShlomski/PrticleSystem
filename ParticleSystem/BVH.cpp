@@ -1,8 +1,29 @@
 #include "BVH.h"
 
-BVH::BVH(Particle* particleList, size_t particleCount)
+BVH::BVH()
 {
-	m_nodeTree = new BVHNode[2 * particleCount - 1];
+    m_nodeTree = NULL;
+    m_particleIndexArray = NULL;
+    m_particleList = NULL;
+    m_particleCount = 0;
+    m_nodesUsed = 0;
+}
+
+BVH::~BVH()
+{
+    delete[] m_nodeTree;
+    delete[] m_particleIndexArray;
+}
+
+void BVH::Update(Particle* particleList, size_t particleCount)
+{
+    if (m_nodeTree != NULL && m_particleIndexArray != NULL)
+    {
+        delete[] m_nodeTree;
+        delete[] m_particleIndexArray;
+    }
+
+    m_nodeTree = new BVHNode[2 * particleCount - 1];
 	m_particleIndexArray = new size_t[particleCount];
     for (size_t i = 0; i < particleCount; i++) m_particleIndexArray[i] = i;
     m_particleList = particleList;
@@ -16,13 +37,7 @@ BVH::BVH(Particle* particleList, size_t particleCount)
     root.particleCount = particleCount;
     UpdateNodeBounds(0);
     // subdivide recursively
-    //Subdivide(rootNodeIdx);
-}
-
-BVH::~BVH()
-{
-	delete[] m_nodeTree;
-	delete[] m_particleIndexArray;
+    Subdivide(0);
 }
 
 void BVH::UpdateNodeBounds(size_t nodeIdx)
@@ -46,15 +61,18 @@ void BVH::Subdivide(size_t nodeIdx)
     // terminate recursion
     BVHNode& node = m_nodeTree[nodeIdx];
     if (node.particleCount <= 2) return;
+
     // determine split axis and position
     Coordinate extent = node.aabbMax - node.aabbMin;
     int axis = 0;
     if (extent.y > extent.x) axis = 1;
     if (extent.z > extent.y) axis = 2;
     float splitPos = node.aabbMin[axis] + extent[axis] * 0.5f;
+
     // in-place partition
     int i = node.firstParticleIndex;
     int j = i + node.particleCount - 1;
+
     while (i <= j)
     {
         if (m_particleList[m_particleIndexArray[i]].getPosition()[axis] < splitPos)
