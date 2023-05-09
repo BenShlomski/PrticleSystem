@@ -105,6 +105,7 @@ int main(void)
             lastTime += 1.0;
         }
 
+        // update volume hiarchy
         bvh.Update(particles, PARTICLE_COUNT);
 
         // change particle position and velocity
