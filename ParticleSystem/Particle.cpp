@@ -18,7 +18,8 @@ Particle::Particle(const float radius, Coordinate position, Coordinate velocity,
 	m_velocity = velocity;
 	m_acceleration = acceleration;
 	m_color = color;
-	m_mass = 4 * M_PI * pow(radius, 3) / 3;
+	// TODO if we go 3d then make this a sphere
+	m_mass = 4 * M_PI * pow(radius, 2) / 4;
 	m_collidedOnCurrentFrame = false;
 }
 

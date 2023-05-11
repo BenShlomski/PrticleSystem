@@ -30,14 +30,16 @@ int main(void)
 {
     GLFWwindow* window;
     Particle particles[PARTICLE_COUNT];
-    BVH bvh = BVH();
-    bvh.Update(particles, PARTICLE_COUNT);
 
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
     {
         particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {900, 900, 0}, {0, 0, 0});
     }
+
+    // setting up initial bounding volume hiarchy
+    BVH bvh = BVH();
+    //bvh.Update(particles, PARTICLE_COUNT);
 
     // randomize seed
     srand(time(NULL));
@@ -92,7 +94,7 @@ int main(void)
 
         if (timeDifference >= 1.0)
         {
-            timeStep = 1000.0 / float(nbFrames);
+            timeStep = 1000.0 / nbFrames;
 
             // display to window and reset timer
             std::string ms = std::to_string(timeStep);
@@ -106,7 +108,7 @@ int main(void)
         }
 
         // update volume hiarchy
-        bvh.Update(particles, PARTICLE_COUNT);
+        //bvh.Update(particles, PARTICLE_COUNT);
 
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;

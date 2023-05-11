@@ -20,12 +20,14 @@ void BVH::Update(Particle* particleList, size_t particleCount)
     if (m_nodeTree != NULL)
     {
         delete[] m_nodeTree;
+        m_nodeTree = NULL;
     }
 
     if (m_particleIndexArray != NULL)
     {
-        // this is the line. i am so done.
+        // TODO this is the line. i am so done.
         delete[] m_particleIndexArray;
+        m_particleIndexArray = NULL;
     }
 
     m_nodeTree = new BVHNode[2 * particleCount - 1];
@@ -70,6 +72,8 @@ void BVH::UpdateNodeBounds(size_t nodeIdx)
         node.aabbMin = node.aabbMin.coordinateMin(leafParticle.getPosition());
         node.aabbMax = node.aabbMax.coordinateMax(leafParticle.getPosition());
     }
+
+    node.PrintBVH();
 }
 
 void BVH::Subdivide(size_t nodeIdx)
@@ -97,9 +101,9 @@ void BVH::Subdivide(size_t nodeIdx)
         {
             // swap particle positions
             size_t temp = m_particleIndexArray[i];
-            m_particleIndexArray[i] = m_particleIndexArray[j--];
-            m_particleIndexArray[j--] = temp;
-
+            m_particleIndexArray[i] = m_particleIndexArray[j];
+            m_particleIndexArray[j] = temp;
+            j--;
         }
     }
     // abort split if one of the sides is empty
@@ -109,11 +113,14 @@ void BVH::Subdivide(size_t nodeIdx)
     // create child nodes
     int leftChildIdx = m_nodesUsed++;
     int rightChildIdx = m_nodesUsed++;
+
     m_nodeTree[leftChildIdx].firstParticleIndex = node.firstParticleIndex;
     m_nodeTree[leftChildIdx].particleCount = leftCount;
     m_nodeTree[rightChildIdx].firstParticleIndex = i;
     m_nodeTree[rightChildIdx].particleCount = node.particleCount - leftCount;
+
     node.leftChild = leftChildIdx;
+    node.rightChild = rightChildIdx;
     node.particleCount = 0;
     UpdateNodeBounds(leftChildIdx);
     UpdateNodeBounds(rightChildIdx);

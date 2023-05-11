@@ -13,6 +13,17 @@ struct BVHNode
     size_t particleCount;
 
     bool isLeaf() { return particleCount > 0; }
+    void PrintBVH()
+    {
+        std::cout << "{\n";
+        std::cout << "  min point: (" << aabbMin.x << ", " << aabbMin.y << ", " << aabbMin.z  << ")\n";
+        std::cout << "  max point: (" << aabbMax.x << ", " << aabbMax.y << ", " << aabbMax.z  << ")\n";
+        std::cout << "  leftChild: " << leftChild << std::endl;
+        std::cout << "  rightChild: " << rightChild << std::endl;
+        std::cout << "  firstParticleIndex: " << firstParticleIndex << std::endl;
+        std::cout << "  particleCount: " << particleCount << std::endl;
+        std::cout << "}\n\n";
+    }
 };
 
 class BVH
