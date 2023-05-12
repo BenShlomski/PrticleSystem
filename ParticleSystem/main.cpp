@@ -11,7 +11,7 @@
 #include "Particle.h"
 #include "BVH.h"
 
-constexpr auto PARTICLE_COUNT = 50;
+constexpr auto PARTICLE_COUNT = 1000;
 constexpr auto CIRCLE_VERTECIES = 32;
 
 constexpr auto SCREEN_WIDTH = 1920;
@@ -22,7 +22,7 @@ void updateParticles(Particle* particles, size_t particleCount, float timeStep);
 
 void drawParticles(Particle* particles, size_t particleCount);
 
-void drawBVH(BVHNode* root, size_t nodesUsed);
+void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves);
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
 
@@ -34,12 +34,12 @@ void processInput(GLFWwindow* window);
 int main(void)
 {
     GLFWwindow* window;
-    Particle particles[PARTICLE_COUNT];
+    Particle* particles = new Particle[PARTICLE_COUNT];
 
     // randomize particles TODO: maybey move this to a different function
-    for (Particle &particle : particles)
+    for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {90, 90, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(5, 15, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {10, 10, 0}, {0, 0, 0});
     }
 
     // setting up initial bounding volume hiarchy
@@ -117,13 +117,13 @@ int main(void)
         previousFrameTime = currentTime;
         updateParticles(particles, PARTICLE_COUNT, timeStep);
 
-        // update volume hiarchy
+        // update bounding volume hiarchy
         bvh.Update(particles, PARTICLE_COUNT);
         bvh.HandleCollision();
 
         // render
         drawParticles(particles, PARTICLE_COUNT);
-        drawBVH(bvh.GetRoot(), bvh.GetNodeCount());
+        drawBVH(bvh.GetRoot(), bvh.GetNodeCount(), true);
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -131,7 +131,7 @@ int main(void)
         // Poll for and process events
         glfwPollEvents();
     }
-
+    delete[] particles;
     glfwTerminate();
 
     return 0;
@@ -141,7 +141,7 @@ void updateParticles(Particle* particles, size_t particleCount, float timeStep)
 {
     for (size_t i = 0; i < particleCount; i++)
     {
-        particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0}, particles, particleCount);
+        particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0});
     }
 }
 
@@ -158,11 +158,14 @@ void drawParticles(Particle* particles, size_t particleCount)
     }
 }
 
-void drawBVH(BVHNode* root, size_t nodesUsed)
+void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves)
 {
     for (size_t i = 0; i < nodesUsed; i++)
     {
-        draweRectangle(root[i].aabbMin, root[i].aabbMax);
+        BVHNode node = root[i];
+
+        if (node.isLeaf() || !onlyLeaves)
+            draweRectangle(node.aabbMin, node.aabbMax);
     }
 }
 

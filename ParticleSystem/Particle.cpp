@@ -38,7 +38,7 @@ inline float Particle::getRandomInRange(float min, float max)
 	return float(min * 1000 + ((std::rand() * 1000) % int((max * 1000 - min * 1000 + 1)))) / 1000.0;
 }
 
-void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coordinate boundingBoxTopRightPoint, Particle* domainPtr, size_t domainParticleCount)
+void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coordinate boundingBoxTopRightPoint)
 {
 	m_velocity.x += m_acceleration.x * timeStep;
 	m_velocity.y += m_acceleration.y * timeStep;
@@ -83,6 +83,9 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 
 void Particle::handleCollision(Particle& particle)
 {
+	Coordinate particlePosition = particle.getPosition();
+	//std::cout << particle.getPosition().x << ", " << m_position.x << " ";
+
 	if (m_collidedOnCurrentFrame)
 	{
 		// collision has been delt with on this frame
@@ -91,8 +94,10 @@ void Particle::handleCollision(Particle& particle)
 		return;
 	}
 
-	if (m_position.distance(particle.getPosition()) <= m_radius + particle.getRadius() && &particle != this)
+	if (m_position.distance(particlePosition) <= m_radius + particle.getRadius() && m_position != particlePosition)
 	{
+		std::cout << "Collision!\n";
+
 		// mark particles as having collided
 		particle.setCollisionStatus(true);
 		
@@ -101,9 +106,9 @@ void Particle::handleCollision(Particle& particle)
 		float tempVelocity = particle1Velocity;
 
 		// finding the direction vector
-		float dx = m_position.x - particle.getPosition().x;
-		float dy = m_position.y - particle.getPosition().y;
-		float dz = m_position.z - particle.getPosition().z;
+		float dx = m_position.x - particlePosition.x;
+		float dy = m_position.y - particlePosition.y;
+		float dz = m_position.z - particlePosition.z;
 		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 });
 		Coordinate directionVector = { dx / directionVectorScale,dy / directionVectorScale,dz / directionVectorScale };
 

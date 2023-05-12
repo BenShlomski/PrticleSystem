@@ -63,6 +63,7 @@ void BVH::HandleCollision()
     for (size_t nodeIndex = 0; nodeIndex < m_nodesUsed; nodeIndex++)
     {
         BVHNode node = m_nodeTree[nodeIndex];
+        //std::cout << node.particleCount << std::endl;
 
         if (node.isLeaf())
         {

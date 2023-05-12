@@ -12,7 +12,7 @@ struct BVHNode
     size_t firstParticleIndex;
     size_t particleCount;
 
-    bool isLeaf() { return particleCount > 0; }
+    bool isLeaf() { return particleCount <= 0; }
     void PrintBVH()
     {
         std::cout << "{\n";

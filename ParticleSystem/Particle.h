@@ -13,7 +13,7 @@ public:
 	~Particle() = default;
 	Particle(const float radius, Coordinate position, Coordinate velocity, Coordinate acceleration, Coordinate color);
 	void randomizeParticle(const float minRadius, const float maxRadius, Coordinate minPosition, Coordinate maxPosition, Coordinate maxVelocity, Coordinate acceleration);
-	void update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coordinate boundingBoxTopRightPoint, Particle* domainPtr, size_t domainParticleCount);
+	void update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coordinate boundingBoxTopRightPoint);
 	void handleCollision(Particle& particle);
 	
 	float getRadius();
