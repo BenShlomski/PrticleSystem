@@ -5,6 +5,7 @@
 #include <math.h>
 #include "Coordinate.h"
 
+
 class Particle
 {
 public:
@@ -13,6 +14,7 @@ public:
 	Particle(const float radius, Coordinate position, Coordinate velocity, Coordinate acceleration, Coordinate color);
 	void randomizeParticle(const float minRadius, const float maxRadius, Coordinate minPosition, Coordinate maxPosition, Coordinate maxVelocity, Coordinate acceleration);
 	void update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coordinate boundingBoxTopRightPoint, Particle* domainPtr, size_t domainParticleCount);
+	void handleCollision(Particle& particle);
 	
 	float getRadius();
 	float getMass();
@@ -41,6 +43,5 @@ private:
 	bool m_collidedOnCurrentFrame;
 
 	inline float getRandomInRange(float min, float max);
-	void handleCollision(Particle* domainPtr, size_t domainParticleCount);
 };
 

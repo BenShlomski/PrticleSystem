@@ -58,6 +58,29 @@ void BVH::Update(Particle* particleList, size_t particleCount)
     Subdivide(0);
 }
 
+void BVH::HandleCollision()
+{
+    for (size_t nodeIndex = 0; nodeIndex < m_nodesUsed; nodeIndex++)
+    {
+        BVHNode node = m_nodeTree[nodeIndex];
+
+        if (node.isLeaf())
+        {
+            for (size_t particleAIndex = 0; particleAIndex < node.particleCount; particleAIndex++)
+            {
+                Particle particleA = m_particleList[m_particleIndexArray[node.firstParticleIndex + particleAIndex]];
+
+                for (size_t particleBIndex = 0; particleBIndex < node.particleCount; particleBIndex++)
+                {
+                    Particle particleB = m_particleList[m_particleIndexArray[node.firstParticleIndex + particleBIndex]];
+
+                    particleA.handleCollision(particleB);
+                }
+            }
+        }
+    }
+}
+
 BVHNode* BVH::GetRoot()
 {
     return m_nodeTree;
@@ -66,6 +89,11 @@ BVHNode* BVH::GetRoot()
 size_t BVH::GetNodeCount()
 {
     return m_nodesUsed;
+}
+
+size_t BVH::GetGloabalIndexFromNodeIndex(size_t index)
+{
+    return m_particleIndexArray[index];
 }
 
 void BVH::UpdateNodeBounds(size_t nodeIdx)

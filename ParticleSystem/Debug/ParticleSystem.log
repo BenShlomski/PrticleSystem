@@ -6,8 +6,8 @@ C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(73,16): war
 C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(84,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(96,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(102,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(155,85): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(155,62): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(155,39): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(172,34): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(156,85): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(156,62): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(156,39): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
+C:\Users\Yonatan\source\repos\ParticleSystem\ParticleSystem\main.cpp(173,34): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
   ParticleSystem.vcxproj -> C:\Users\Yonatan\source\repos\ParticleSystem\Debug\ParticleSystem.exe

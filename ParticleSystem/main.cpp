@@ -112,13 +112,14 @@ int main(void)
             lastTime += 1.0;
         }
 
-        // update volume hiarchy
-        bvh.Update(particles, PARTICLE_COUNT);
-
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;
         previousFrameTime = currentTime;
         updateParticles(particles, PARTICLE_COUNT, timeStep);
+
+        // update volume hiarchy
+        bvh.Update(particles, PARTICLE_COUNT);
+        bvh.HandleCollision();
 
         // render
         drawParticles(particles, PARTICLE_COUNT);

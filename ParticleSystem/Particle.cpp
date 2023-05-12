@@ -79,11 +79,9 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 		m_velocity.z *= -1;
 		m_position.z = 2 * boundingBoxBottomLeftPoint.z - m_position.z;
 	}
-
-	handleCollision(domainPtr, domainParticleCount);
 }
 
-void Particle::handleCollision(Particle* domainPtr, size_t domainParticleCount)
+void Particle::handleCollision(Particle& particle)
 {
 	if (m_collidedOnCurrentFrame)
 	{
@@ -93,45 +91,37 @@ void Particle::handleCollision(Particle* domainPtr, size_t domainParticleCount)
 		return;
 	}
 
-	for (size_t i = 0; i < domainParticleCount; i++)
+	if (m_position.distance(particle.getPosition()) <= m_radius + particle.getRadius() && &particle != this)
 	{
-		Particle particle = domainPtr[i];
-
-		if (m_position.distance(particle.getPosition()) <= m_radius + particle.getRadius() && domainPtr + i != this)
-		{
-			// mark particles as having collided
-			particle.setCollisionStatus(true);
+		// mark particles as having collided
+		particle.setCollisionStatus(true);
 		
-			float particle1Velocity = m_velocity.distance({ 0,0,0 }); // lazy way to find scale
-			float particle2Velocity = particle.getVelocity().distance({ 0,0,0 });
-			float tempVelocity = particle1Velocity;
+		float particle1Velocity = m_velocity.distance({ 0,0,0 }); // lazy way to find scale
+		float particle2Velocity = particle.getVelocity().distance({ 0,0,0 });
+		float tempVelocity = particle1Velocity;
 
-			// finding the direction vector
-			float dx = m_position.x - particle.getPosition().x;
-			float dy = m_position.y - particle.getPosition().y;
-			float dz = m_position.z - particle.getPosition().z;
-			float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 });
-			Coordinate directionVector = { dx / directionVectorScale,dy / directionVectorScale,dz / directionVectorScale };
+		// finding the direction vector
+		float dx = m_position.x - particle.getPosition().x;
+		float dy = m_position.y - particle.getPosition().y;
+		float dz = m_position.z - particle.getPosition().z;
+		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 });
+		Coordinate directionVector = { dx / directionVectorScale,dy / directionVectorScale,dz / directionVectorScale };
 
-			// calculating new speed after colission
-			particle1Velocity = (particle1Velocity * (m_mass - particle.getMass()) + 2 * particle.getMass() * particle2Velocity) / (m_mass + particle.getMass());
-			particle2Velocity = (particle2Velocity * (particle.getMass() - m_mass) + 2 * m_mass * tempVelocity) / (m_mass + particle.getMass());
+		// calculating new speed after colission
+		particle1Velocity = (particle1Velocity * (m_mass - particle.getMass()) + 2 * particle.getMass() * particle2Velocity) / (m_mass + particle.getMass());
+		particle2Velocity = (particle2Velocity * (particle.getMass() - m_mass) + 2 * m_mass * tempVelocity) / (m_mass + particle.getMass());
 
-			//std::cout << directionVector.x << ", " << directionVector.y << ", " << directionVector.z << " - " << m_color.x << " - " << m_collidedOnCurrentFrame << std::endl;
+		//std::cout << directionVector.x << ", " << directionVector.y << ", " << directionVector.z << " - " << m_color.x << " - " << m_collidedOnCurrentFrame << std::endl;
 
-			// updating particle members with new speed
-			m_velocity.x = particle1Velocity * directionVector.x;
-			m_velocity.y = particle1Velocity * directionVector.y;
-			m_velocity.y = particle1Velocity * directionVector.y;
+		// updating particle members with new speed
+		m_velocity.x = particle1Velocity * directionVector.x;
+		m_velocity.y = particle1Velocity * directionVector.y;
+		m_velocity.y = particle1Velocity * directionVector.y;
 
-			particle.setVelocity({
-				particle2Velocity * -directionVector.x,
-				particle2Velocity * -directionVector.y, 
-				particle2Velocity * -directionVector.z, });
-
-			// makes it deal with only one collision at a time (for simplicity)
-			break;
-		}
+		particle.setVelocity({
+			particle2Velocity * -directionVector.x,
+			particle2Velocity * -directionVector.y, 
+			particle2Velocity * -directionVector.z, });
 	}
 
 	// collision has been delt with on this frame
