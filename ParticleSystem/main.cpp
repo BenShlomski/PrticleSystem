@@ -18,13 +18,18 @@ constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
 
 
-void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
-
-void processInput(GLFWwindow* window);
-
 void updateParticles(Particle* particles, size_t particleCount, float timeStep);
 
 void drawParticles(Particle* particles, size_t particleCount);
+
+void drawBVH(BVHNode* root, size_t nodesUsed);
+
+void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
+
+void draweRectangle(Coordinate a, Coordinate b);
+
+void processInput(GLFWwindow* window);
+
 
 int main(void)
 {
@@ -34,12 +39,12 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (Particle &particle : particles)
     {
-        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {900, 900, 0}, {0, 0, 0});
+        particle.randomizeParticle(10, 40, { 60, 60, 0 }, { SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0 }, {90, 90, 0}, {0, 0, 0});
     }
 
     // setting up initial bounding volume hiarchy
     BVH bvh = BVH();
-    //bvh.Update(particles, PARTICLE_COUNT);
+    bvh.Update(particles, PARTICLE_COUNT);
 
     // randomize seed
     srand(time(NULL));
@@ -108,7 +113,7 @@ int main(void)
         }
 
         // update volume hiarchy
-        //bvh.Update(particles, PARTICLE_COUNT);
+        bvh.Update(particles, PARTICLE_COUNT);
 
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;
@@ -117,6 +122,7 @@ int main(void)
 
         // render
         drawParticles(particles, PARTICLE_COUNT);
+        drawBVH(bvh.GetRoot(), bvh.GetNodeCount());
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -128,6 +134,35 @@ int main(void)
     glfwTerminate();
 
     return 0;
+}
+
+void updateParticles(Particle* particles, size_t particleCount, float timeStep)
+{
+    for (size_t i = 0; i < particleCount; i++)
+    {
+        particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0}, particles, particleCount);
+    }
+}
+
+void drawParticles(Particle* particles, size_t particleCount)
+{
+    Particle particle;
+
+    for (size_t i = 0; i < particleCount; i++)
+    {
+        particle = particles[i];
+
+        glColor3ub(particle.getColor().x, particle.getColor().y, particle.getColor().z); // set circle color
+        drawCircle(particle.getPosition().x, particle.getPosition().y, particle.getPosition().z, particle.getRadius(), CIRCLE_VERTECIES);
+    }
+}
+
+void drawBVH(BVHNode* root, size_t nodesUsed)
+{
+    for (size_t i = 0; i < nodesUsed; i++)
+    {
+        draweRectangle(root[i].aabbMin, root[i].aabbMax);
+    }
 }
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides)
@@ -172,29 +207,29 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfS
     delete[] allCircleVertices;
 }
 
+void draweRectangle(Coordinate a, Coordinate b)
+{
+    GLfloat rectangleVertices[4 * 2];
+
+    rectangleVertices[2 * 0 + 0] = a.x;
+    rectangleVertices[2 * 0 + 1] = b.y;
+    rectangleVertices[2 * 1 + 0] = a.x;
+    rectangleVertices[2 * 1 + 1] = a.y;
+    rectangleVertices[2 * 2 + 0] = b.x;
+    rectangleVertices[2 * 2 + 1] = a.y;
+    rectangleVertices[2 * 3 + 0] = b.x;
+    rectangleVertices[2 * 3 + 1] = b.y;
+
+    glColor3ub(255, 255, 255);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), rectangleVertices);
+    glVertexPointer(2, GL_FLOAT, 0, rectangleVertices);
+    glDrawArrays(GL_LINE_LOOP, 0, 4);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-}
-
-void updateParticles(Particle* particles, size_t particleCount, float timeStep)
-{
-    for (size_t i = 0; i < particleCount; i++)
-    {
-        particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0}, particles, particleCount);
-    }
-}
-
-void drawParticles(Particle* particles, size_t particleCount)
-{
-    Particle particle;
-
-    for (size_t i = 0; i < particleCount; i++)
-    {
-        particle = particles[i];
-
-        glColor3ub(particle.getColor().x, particle.getColor().y, particle.getColor().z); // randomize circle color
-        drawCircle(particle.getPosition().x, particle.getPosition().y, particle.getPosition().z, particle.getRadius(), CIRCLE_VERTECIES);
-    }
 }

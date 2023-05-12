@@ -32,6 +32,8 @@ public:
 	BVH();
 	~BVH();
     void Update(Particle* particleList, size_t particleCount);
+    BVHNode* GetRoot();
+    size_t GetNodeCount();
 private:
     BVHNode* m_nodeTree;
     size_t* m_particleIndexArray;

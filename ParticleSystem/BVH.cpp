@@ -58,22 +58,38 @@ void BVH::Update(Particle* particleList, size_t particleCount)
     Subdivide(0);
 }
 
+BVHNode* BVH::GetRoot()
+{
+    return m_nodeTree;
+}
+
+size_t BVH::GetNodeCount()
+{
+    return m_nodesUsed;
+}
+
 void BVH::UpdateNodeBounds(size_t nodeIdx)
 {
     BVHNode& node = m_nodeTree[nodeIdx];
-    node.aabbMin = m_particleList[node.firstParticleIndex].getPosition();
-    node.aabbMax = m_particleList[node.firstParticleIndex].getPosition();
+    Coordinate particlePosition = m_particleList[node.firstParticleIndex].getPosition();
+    size_t particleRadius = m_particleList[node.firstParticleIndex].getRadius();
+    node.aabbMin = { particlePosition.x - particleRadius, particlePosition.y - particleRadius, particlePosition.z - particleRadius, };
+    node.aabbMax = { particlePosition.x + particleRadius, particlePosition.y + particleRadius, particlePosition.z + particleRadius, };
 
     for (size_t first = node.firstParticleIndex, i = 0; i < node.particleCount; i++)
     {
         size_t particleIndex = m_particleIndexArray[first + i];
         Particle& leafParticle = m_particleList[particleIndex];
 
-        node.aabbMin = node.aabbMin.coordinateMin(leafParticle.getPosition());
-        node.aabbMax = node.aabbMax.coordinateMax(leafParticle.getPosition());
+        particlePosition = leafParticle.getPosition();
+        particleRadius = leafParticle.getRadius();
+
+        node.aabbMin = node.aabbMin.coordinateMin({ particlePosition.x - particleRadius, particlePosition.y - particleRadius, particlePosition.z - particleRadius, });
+        node.aabbMax = node.aabbMax.coordinateMax({ particlePosition.x + particleRadius, particlePosition.y + particleRadius, particlePosition.z + particleRadius, });
     }
 
-    node.PrintBVH();
+    // print BVH status
+    //node.PrintBVH();
 }
 
 void BVH::Subdivide(size_t nodeIdx)
