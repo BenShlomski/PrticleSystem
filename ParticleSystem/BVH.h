@@ -12,7 +12,7 @@ struct BVHNode
     size_t firstParticleIndex;
     size_t particleCount;
 
-    bool isLeaf() { return particleCount <= 0; }
+    bool isLeaf() { return particleCount > 0; }
     void PrintBVH()
     {
         std::cout << "{\n";
@@ -45,5 +45,6 @@ private:
 
     void UpdateNodeBounds(size_t nodeIdx);
     void Subdivide(size_t nodeIdx);
+    void HandleParticleCollisions(Particle& particle, size_t nodeIndex, Coordinate particleMinCoordinate, Coordinate particleMaxCoordinate);
 };
 

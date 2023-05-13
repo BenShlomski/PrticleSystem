@@ -96,8 +96,6 @@ void Particle::handleCollision(Particle& particle)
 
 	if (m_position.distance(particlePosition) <= m_radius + particle.getRadius() && m_position != particlePosition)
 	{
-		std::cout << "Collision!\n";
-
 		// mark particles as having collided
 		particle.setCollisionStatus(true);
 		

@@ -14,5 +14,7 @@ struct Coordinate {
 	Coordinate operator-(const Coordinate& b) { return { x - b.x, y - b.y, z - b.z }; }
 	bool operator==(Coordinate const& b) { return (x == b.x && y == b.y && z == b.z); }
 	bool operator!=(Coordinate const& b) { return !(x == b.x && y == b.y && z == b.z); }
+	bool operator<(Coordinate const& b) { return !(x < b.x && y < b.y && z < b.z); }
+	bool operator>(Coordinate const& b) { return !(x > b.x && y > b.y && z > b.z); }
 	float operator[](size_t i) { switch (i) { case 0: return x; case 1: return y; case 2: return 3; default: return -1; } }
 };

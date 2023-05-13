@@ -11,11 +11,22 @@
 #include "Particle.h"
 #include "BVH.h"
 
-constexpr auto PARTICLE_COUNT = 1000;
+#define _CRT_SECURE_NO_WARNINGS
+
+constexpr auto PARTICLE_COUNT = 400;
 constexpr auto CIRCLE_VERTECIES = 32;
 
 constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
+
+typedef struct
+{
+    unsigned char imageTypeCode;
+    short int imageWidth;
+    short int imageHeight;
+    unsigned char bitCount;
+    unsigned char* imageData;
+} TGAFILE;
 
 
 void updateParticles(Particle* particles, size_t particleCount, float timeStep);
@@ -26,9 +37,11 @@ void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves);
 
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
 
-void draweRectangle(Coordinate a, Coordinate b);
+void draweRectangle(Coordinate a, Coordinate b, size_t scalingFactor);
 
 void processInput(GLFWwindow* window);
+
+bool LoadTGAFile(const char* filename, TGAFILE* tgaFile);
 
 
 int main(void)
@@ -39,7 +52,7 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particles[i].randomizeParticle(5, 15, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {10, 10, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(20, 70, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {900, 900, 0}, {0, 0, 0});
     }
 
     // setting up initial bounding volume hiarchy
@@ -112,6 +125,11 @@ int main(void)
             lastTime += 1.0;
         }
 
+        /*TGAFILE image;
+        LoadTGAFile("C:\\Users\\Yonatan\\source\\repos\\ParticleSystem\\flipbooks\\Explosion02_5x5.tga", &image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.imageWidth, image.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image.imageData);
+        free(image.imageData);*/
+
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;
         previousFrameTime = currentTime;
@@ -165,7 +183,10 @@ void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves)
         BVHNode node = root[i];
 
         if (node.isLeaf() || !onlyLeaves)
-            draweRectangle(node.aabbMin, node.aabbMax);
+        {
+            glColor3ub(255 * node.isLeaf(), 255, 255);
+            draweRectangle(node.aabbMin, node.aabbMax, 50 * (nodesUsed - i) / nodesUsed);
+        }
     }
 }
 
@@ -211,18 +232,18 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfS
     delete[] allCircleVertices;
 }
 
-void draweRectangle(Coordinate a, Coordinate b)
+void draweRectangle(Coordinate a, Coordinate b, size_t scalingFactor)
 {
     GLfloat rectangleVertices[4 * 2];
 
-    rectangleVertices[2 * 0 + 0] = a.x;
-    rectangleVertices[2 * 0 + 1] = b.y;
-    rectangleVertices[2 * 1 + 0] = a.x;
-    rectangleVertices[2 * 1 + 1] = a.y;
-    rectangleVertices[2 * 2 + 0] = b.x;
-    rectangleVertices[2 * 2 + 1] = a.y;
-    rectangleVertices[2 * 3 + 0] = b.x;
-    rectangleVertices[2 * 3 + 1] = b.y;
+    rectangleVertices[2 * 0 + 0] = a.x - scalingFactor;
+    rectangleVertices[2 * 0 + 1] = b.y + scalingFactor;
+    rectangleVertices[2 * 1 + 0] = a.x - scalingFactor;
+    rectangleVertices[2 * 1 + 1] = a.y - scalingFactor;
+    rectangleVertices[2 * 2 + 0] = b.x + scalingFactor;
+    rectangleVertices[2 * 2 + 1] = a.y - scalingFactor;
+    rectangleVertices[2 * 3 + 0] = b.x + scalingFactor;
+    rectangleVertices[2 * 3 + 1] = b.y + scalingFactor;
 
     glColor3ub(255, 255, 255);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -237,3 +258,139 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
+
+bool LoadTGAFile(const char* filename, TGAFILE* tgaFile)
+{
+    FILE* filePtr;
+    unsigned char ucharBad;
+    short int sintBad;
+    long imageSize;
+    int colorMode;
+    unsigned char colorSwap;
+
+    // Open the TGA file.
+    fopen_s(&filePtr, filename, "rb");
+    if (filePtr == NULL)
+    {
+        return false;
+    }
+
+    // Read the two first bytes we don't need.
+    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
+    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
+
+    // Which type of image gets stored in imageTypeCode.
+    fread(&tgaFile->imageTypeCode, sizeof(unsigned char), 1, filePtr);
+
+    // For our purposes, the type code should be 2 (uncompressed RGB image)
+    // or 3 (uncompressed black-and-white images).
+    if (tgaFile->imageTypeCode != 2 && tgaFile->imageTypeCode != 3)
+    {
+        fclose(filePtr);
+        return false;
+    }
+
+    // Read 13 bytes of data we don't need.
+    fread(&sintBad, sizeof(short int), 1, filePtr);
+    fread(&sintBad, sizeof(short int), 1, filePtr);
+    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
+    fread(&sintBad, sizeof(short int), 1, filePtr);
+    fread(&sintBad, sizeof(short int), 1, filePtr);
+
+    // Read the image's width and height.
+    fread(&tgaFile->imageWidth, sizeof(short int), 1, filePtr);
+    fread(&tgaFile->imageHeight, sizeof(short int), 1, filePtr);
+
+    // Read the bit depth.
+    fread(&tgaFile->bitCount, sizeof(unsigned char), 1, filePtr);
+
+    // Read one byte of data we don't need.
+    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
+
+    // Color mode -> 3 = BGR, 4 = BGRA.
+    colorMode = tgaFile->bitCount / 8;
+    imageSize = tgaFile->imageWidth * tgaFile->imageHeight * colorMode;
+
+    // Allocate memory for the image data.
+    tgaFile->imageData = (unsigned char*)malloc(sizeof(unsigned char) * imageSize);
+
+    // Read the image data.
+    fread(tgaFile->imageData, sizeof(unsigned char), imageSize, filePtr);
+
+    // Change from BGR to RGB so OpenGL can read the image data.
+    for (int imageIdx = 0; imageIdx < imageSize; imageIdx += colorMode)
+    {
+        colorSwap = tgaFile->imageData[imageIdx];
+        tgaFile->imageData[imageIdx] = tgaFile->imageData[imageIdx + 2];
+        tgaFile->imageData[imageIdx + 2] = colorSwap;
+    }
+
+    fclose(filePtr);
+    return true;
+}
+//
+//
+//int main(int argc, char** argv)
+//{
+//    //create GL context
+//    GLFWwindow* window;
+//    
+//    // Initialize the library
+//    if (!glfwInit())
+//    {
+//        return -1;
+//    }
+//    
+//    // Create a windowed mode window and its OpenGL context
+//    window = glfwCreateWindow(1920, 1080, "MainWindow", NULL, NULL);
+//    
+//    if (!window)
+//    {
+//        glfwTerminate();
+//        return -1;
+//    }
+//    
+//    // Make the window's context current
+//    glfwMakeContextCurrent(window);
+//    
+//    //Load GLAD so it configures OpenGL
+//    gladLoadGL();
+//
+//    TGAFILE image;
+//    LoadTGAFile("C:/Users/Yonatan/source/repos/ParticleSystem/flipbooks/Explosion02_5x5.tga", &image);
+//
+//    //upload to GPU texture
+//    GLuint tex;
+//    glGenTextures(1, &tex);
+//    glBindTexture(GL_TEXTURE_2D, tex);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 8, 8, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, image.imageData);
+//    glBindTexture(GL_TEXTURE_2D, 0);
+//
+//    //match projection to window resolution (could be in reshape callback)
+//    glMatrixMode(GL_PROJECTION);
+//    glOrtho(0, 1920, 0, 1080, -1, 1);
+//    glMatrixMode(GL_MODELVIEW);
+//
+//    //clear and draw quad with texture (could be in display callback)
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    glBindTexture(GL_TEXTURE_2D, tex);
+//    glEnable(GL_TEXTURE_2D);
+//    glBegin(GL_QUADS);
+//    glTexCoord2i(0, 0); glVertex2i(100, 100);
+//    glTexCoord2i(0, 1); glVertex2i(100, 500);
+//    glTexCoord2i(1, 1); glVertex2i(500, 500);
+//    glTexCoord2i(1, 0); glVertex2i(500, 100);
+//    glEnd();
+//    glDisable(GL_TEXTURE_2D);
+//    glBindTexture(GL_TEXTURE_2D, 0);
+//    
+//    glfwSwapBuffers(window);
+//    free(image.imageData);
+//
+//    getchar(); //pause so you can see what just happened
+//    //System("pause"); //I think this works on windows
+//
+//    return 0;
+//}
