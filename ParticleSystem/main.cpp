@@ -14,8 +14,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 constexpr auto PARTICLE_COUNT = 400;
-constexpr auto CIRCLE_VERTECIES = 32;
+constexpr auto USE_DEFAULT_COLLISION = false;
+constexpr auto SHOW_BVH = false;
 
+constexpr auto CIRCLE_VERTECIES = 32;
 constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
 
@@ -30,6 +32,8 @@ typedef struct
 
 
 void updateParticles(Particle* particles, size_t particleCount, float timeStep);
+
+void defaultCollisionHandle(Particle* particles, size_t particleCount);
 
 void drawParticles(Particle* particles, size_t particleCount);
 
@@ -52,7 +56,7 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particles[i].randomizeParticle(20, 70, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {900, 900, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(10, 10, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {90, 90, 0}, {0, 0, 0});
     }
 
     // setting up initial bounding volume hiarchy
@@ -135,13 +139,21 @@ int main(void)
         previousFrameTime = currentTime;
         updateParticles(particles, PARTICLE_COUNT, timeStep);
 
-        // update bounding volume hiarchy
-        bvh.Update(particles, PARTICLE_COUNT);
-        bvh.HandleCollision();
+        if (USE_DEFAULT_COLLISION)
+        {
+            defaultCollisionHandle(particles, PARTICLE_COUNT);
+        }
+        else
+        {
+            // update bounding volume hiarchy
+            bvh.Update(particles, PARTICLE_COUNT);
+            bvh.HandleCollision();
+        }
 
         // render
         drawParticles(particles, PARTICLE_COUNT);
-        drawBVH(bvh.GetRoot(), bvh.GetNodeCount(), true);
+        if (SHOW_BVH)
+            drawBVH(bvh.GetRoot(), bvh.GetNodeCount(), true);
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -160,6 +172,17 @@ void updateParticles(Particle* particles, size_t particleCount, float timeStep)
     for (size_t i = 0; i < particleCount; i++)
     {
         particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0});
+    }
+}
+
+void defaultCollisionHandle(Particle* particles, size_t particleCount)
+{
+    for (size_t i = 0; i < particleCount; i++)
+    {
+        for (size_t j = 0; j < particleCount; j++) 
+        {
+            particles[i].handleCollision(particles[j]);
+        }
     }
 }
 
