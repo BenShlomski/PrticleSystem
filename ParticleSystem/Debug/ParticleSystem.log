@@ -1,13 +1,2 @@
-﻿  main.cpp
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\Coordinate.h(10,42): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(83,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(106,22): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(106,16): warning C4244: 'argument': conversion from 'float' to 'GLint', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(117,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(129,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(135,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(213,85): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(213,62): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(213,39): warning C4244: 'argument': conversion from 'float' to 'GLubyte', possible loss of data
-C:\Users\danim\source\repos\PrticleSystem\ParticleSystem\main.cpp(236,34): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+﻿  game_app.cpp
   ParticleSystem.vcxproj -> C:\Users\danim\source\repos\PrticleSystem\Debug\ParticleSystem.exe

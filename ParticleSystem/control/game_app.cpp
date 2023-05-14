@@ -22,7 +22,7 @@ GLFWwindow* GameApp::makeWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "This is working I hope", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(this->width, this->height, "This is working I hope", NULL, NULL);
 
 	glfwMakeContextCurrent(window);
 
@@ -31,7 +31,7 @@ GLFWwindow* GameApp::makeWindow() {
 		return NULL;
 	}
 
-	glViewport(0, 0, 640, 480);
+	glViewport(0, 0, this->width, this->height);
 
 	return window;
 }
