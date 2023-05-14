@@ -25,7 +25,6 @@ void BVH::Update(Particle* particleList, size_t particleCount)
 
     if (m_particleIndexArray != NULL)
     {
-        // TODO this is the line. i am so done.
         delete[] m_particleIndexArray;
         m_particleIndexArray = NULL;
     }

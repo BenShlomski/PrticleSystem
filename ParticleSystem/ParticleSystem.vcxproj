@@ -139,13 +139,47 @@
   <ItemGroup>
     <ClCompile Include="..\glad.c" />
     <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="control\game_app.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model\billboard.cpp" />
+    <ClCompile Include="model\bright_billboard.cpp" />
+    <ClCompile Include="model\cube.cpp" />
+    <ClCompile Include="model\light.cpp" />
+    <ClCompile Include="model\player.cpp" />
+    <ClCompile Include="model\scene.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="view\billboard_mesh.cpp" />
+    <ClCompile Include="view\engine.cpp" />
+    <ClCompile Include="view\image.cpp" />
+    <ClCompile Include="view\material.cpp" />
+    <ClCompile Include="view\obj_loader.cpp" />
+    <ClCompile Include="view\obj_mesh.cpp" />
+    <ClCompile Include="view\rectangle_model.cpp" />
+    <ClCompile Include="view\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="control\game_app.h" />
     <ClInclude Include="Coordinate.h" />
+    <ClInclude Include="model\billboard.h" />
+    <ClInclude Include="model\bright_billboard.h" />
+    <ClInclude Include="model\cube.h" />
+    <ClInclude Include="model\light.h" />
+    <ClInclude Include="model\player.h" />
+    <ClInclude Include="model\scene.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="view\billboard_mesh.h" />
+    <ClInclude Include="view\engine.h" />
+    <ClInclude Include="view\image.h" />
+    <ClInclude Include="view\material.h" />
+    <ClInclude Include="view\obj_loader.h" />
+    <ClInclude Include="view\obj_mesh.h" />
+    <ClInclude Include="view\rectangle_model.h" />
+    <ClInclude Include="view\shader.h" />
+    <ClInclude Include="view\stb_image.h" />
+    <ClInclude Include="view\tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

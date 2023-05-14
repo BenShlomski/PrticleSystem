@@ -10,8 +10,10 @@
 #include <cstdlib>
 #include "Particle.h"
 #include "BVH.h"
+#include "stb_image.h"
+#include "config.h"
+#include "control/game_app.h"
 
-#define _CRT_SECURE_NO_WARNINGS
 
 constexpr auto PARTICLE_COUNT = 400;
 constexpr auto USE_DEFAULT_COLLISION = false;
@@ -50,6 +52,20 @@ bool LoadTGAFile(const char* filename, TGAFILE* tgaFile);
 
 int main(void)
 {
+    GameAppCreateInfo appInfo;
+    appInfo.width = SCREEN_WIDTH;
+    appInfo.height = SCREEN_HEIGHT;
+    GameApp* app = new GameApp(&appInfo);
+
+    returnCode nextAction = returnCode::CONTINUE;
+    while (nextAction == returnCode::CONTINUE) {
+        nextAction = app->mainLoop();
+    }
+
+    delete app;
+
+    return 0;
+
     GLFWwindow* window;
     Particle* particles = new Particle[PARTICLE_COUNT];
 
