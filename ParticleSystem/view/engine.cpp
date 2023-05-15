@@ -70,12 +70,12 @@ void Engine::setOnetimeShaderData(int width, int height) {
 
 Engine::~Engine() {
 
-	delete woodMaterial;
-	delete medkitMaterial;
+	/*delete woodMaterial;
+	delete medkitMaterial;*/
 	delete lightMaterial;
 
-	delete cubeModel;
-	delete medkitMesh;
+	/*delete cubeModel;
+	delete medkitMesh;*/
 	delete lightMesh;
 
 	glDeleteProgram(litShader);
@@ -83,21 +83,23 @@ Engine::~Engine() {
 }
 
 void Engine::createModels() {
-	MeshCreateInfo cubeInfo;
-	cubeInfo.filename = "models/cube.obj";
-	cubeInfo.preTransform = 0.2f * glm::mat4(1.0);
-	cubeModel = new ObjMesh(&cubeInfo);
-	medkitMesh = new BillboardMesh(0.3f, 0.25f);
+	//MeshCreateInfo cubeInfo;
+	//cubeInfo.filename = "models/cube.obj";
+	//cubeInfo.preTransform = 0.2f * glm::mat4(1.0);
+	//cubeModel = new ObjMesh(&cubeInfo);
+	//medkitMesh = new BillboardMesh(0.3f, 0.25f);
 	lightMesh = new BillboardMesh(0.2f, 0.1f);
 }
 
 void Engine::createMaterials() {
 	MaterialCreateInfo materialInfo;
-	materialInfo.filename = "textures/wood.jpeg";
+	/*materialInfo.filename = "textures/wood.jpeg";
 	woodMaterial = new Material(&materialInfo);
 	materialInfo.filename = "textures/medkit_albedo.png";
-	medkitMaterial = new Material(&materialInfo);
-	materialInfo.filename = "textures/greenlight.png";
+	medkitMaterial = new Material(&materialInfo);*/
+
+	// TODO make it so it uses a proper part of the image
+	materialInfo.filename = "C:/Users/danim/source/repos/PrticleSystem/flipbooks/Explosion02_5x5.tga";
 	lightMaterial = new Material(&materialInfo);
 }
 
@@ -105,13 +107,14 @@ void Engine::render(Scene* scene) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//lit
-	glUseProgram(litShader);
+	// lamps
+	glUseProgram(litShader); // TODO maybe use this to make good lighting
 	glUniformMatrix4fv(viewMatrixLocationLit, 1, GL_FALSE,
 		glm::value_ptr(scene->player->viewTransform)
 	);
 	glUniform3fv(cameraPosLoc, 1, glm::value_ptr(scene->player->position));
 
+	// billboard lights
 	int i{ 0 };
 	for (BrightBillboard* light : scene->lights) {
 		glUniform3fv(lights.colorLoc[i], 1, glm::value_ptr(light->color));
@@ -120,29 +123,30 @@ void Engine::render(Scene* scene) {
 		++i;
 	}
 
-	woodMaterial->use();
-	glBindVertexArray(cubeModel->VAO);
-	glUniformMatrix4fv(modelMatrixLocationLit, 1, GL_FALSE,
-		glm::value_ptr(scene->cube->modelTransform)
-	);
-	glDrawArrays(GL_TRIANGLES, 0, cubeModel->vertexCount);
+	//woodMaterial->use();
+	//glBindVertexArray(cubeModel->VAO);
+	//glUniformMatrix4fv(modelMatrixLocationLit, 1, GL_FALSE,
+	//	glm::value_ptr(scene->cube->modelTransform)
+	//);
+	//glDrawArrays(GL_TRIANGLES, 0, cubeModel->vertexCount);
 
-	medkitMaterial->use();
-	glBindVertexArray(medkitMesh->VAO);
-	for (Billboard* medkit : scene->medkits) {
-		glUniformMatrix4fv(modelMatrixLocationLit, 1, GL_FALSE,
-			glm::value_ptr(medkit->modelTransform)
-		);
-		glDrawArrays(GL_TRIANGLES, 0, medkitMesh->vertexCount);
-	}
+	//medkitMaterial->use();
+	//glBindVertexArray(medkitMesh->VAO);
+	//for (Billboard* medkit : scene->medkits) {
+	//	glUniformMatrix4fv(modelMatrixLocationLit, 1, GL_FALSE,
+	//		glm::value_ptr(medkit->modelTransform)
+	//	);
+	//	glDrawArrays(GL_TRIANGLES, 0, medkitMesh->vertexCount);
+	//}
 
-	//unlit
-	glUseProgram(unlitShader);
-	glUniformMatrix4fv(
-		viewMatrixLocationUnlit, 1, GL_FALSE, 
-		glm::value_ptr(scene->player->viewTransform)
-	);
+	////unlit
+	//glUseProgram(unlitShader);
+	//glUniformMatrix4fv(
+	//	viewMatrixLocationUnlit, 1, GL_FALSE, 
+	//	glm::value_ptr(scene->player->viewTransform)
+	//);
 
+	// honestly i dont knowwhat this does
 	lightMaterial->use();
 	glBindVertexArray(lightMesh->VAO);
 	for (BrightBillboard* light : scene->lights) {
