@@ -146,7 +146,7 @@ void Engine::render(Scene* scene) {
 	//	glm::value_ptr(scene->player->viewTransform)
 	//);
 
-	// honestly i dont knowwhat this does
+	// honestly i dont know what this does, but its important
 	lightMaterial->use();
 	glBindVertexArray(lightMesh->VAO);
 	for (BrightBillboard* light : scene->lights) {
