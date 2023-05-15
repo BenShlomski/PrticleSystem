@@ -181,6 +181,9 @@
     <ClInclude Include="view\stb_image.h" />
     <ClInclude Include="view\tiny_obj_loader.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\textures\medkit_albedo.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
