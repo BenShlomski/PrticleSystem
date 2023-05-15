@@ -162,14 +162,15 @@ void GameApp::calculateFrameRate() {
 
 	if (delta >= 1) {
 		int framerate{ std::max(1, int(numFrames / delta)) };
-		std::string ms = std::to_string(1000.0 / numFrames);
+		lastTime = currentTime;
+		numFrames = -1;
+		frameTime = float(1000.0 / framerate);
+
+		std::string ms = std::to_string(frameTime);
 		std::string fps = std::to_string(framerate);
 
 		std::string windowTitle = "ms/frame: " + ms + "; fps: " + fps;
 		glfwSetWindowTitle(window, windowTitle.c_str());
-		lastTime = currentTime;
-		numFrames = -1;
-		frameTime = float(1000.0 / framerate);
 	}
 
 	++numFrames;
