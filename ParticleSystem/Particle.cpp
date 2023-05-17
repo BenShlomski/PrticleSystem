@@ -30,7 +30,8 @@ void Particle::randomizeParticle(const float minRadius, const float maxRadius, C
 	m_velocity = {getRandomInRange(-maxVelocity.x, maxVelocity.x), getRandomInRange(-maxVelocity.y, maxVelocity.y), getRandomInRange(-maxVelocity.z, maxVelocity.z) };
 	m_acceleration = acceleration;
 	m_color = { float(std::rand() % 256), float(std::rand() % 256), float(std::rand() % 256) };
-	m_mass = 4 * M_PI * pow(m_radius, 3) / 3;
+	// TODO if we go 3d then make this a sphere
+	m_mass = 4 * M_PI * pow(m_radius, 2) / 4;
 }
 
 inline float Particle::getRandomInRange(float min, float max)
@@ -83,6 +84,7 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 
 void Particle::handleCollision(Particle& particle)
 {
+	float energyConservationPersentege = 0.9;
 	Coordinate particlePosition = particle.getPosition();
 	//std::cout << particle.getPosition().x << ", " << m_position.x << " ";
 
@@ -107,7 +109,7 @@ void Particle::handleCollision(Particle& particle)
 		float dx = m_position.x - particlePosition.x;
 		float dy = m_position.y - particlePosition.y;
 		float dz = m_position.z - particlePosition.z;
-		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 });
+		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 }) * (1.0/energyConservationPersentege);
 		Coordinate directionVector = { dx / directionVectorScale,dy / directionVectorScale,dz / directionVectorScale };
 
 		// calculating new speed after colission

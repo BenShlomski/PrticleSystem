@@ -56,7 +56,7 @@ int main(void)
     // randomize particles TODO: maybey move this to a different function
     for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particles[i].randomizeParticle(10, 10, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {90, 90, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(5, 15, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {90, 90, 0}, {0, 0, 0});
     }
 
     // setting up initial bounding volume hiarchy
