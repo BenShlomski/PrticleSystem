@@ -1,9 +1,23 @@
 #include "billboard_mesh.h"
 
-BillboardMesh::BillboardMesh(float w, float h) {
-
+BillboardMesh::BillboardMesh(float w, float h) 
+{
+	float uvScaling = 1.0f / 5.0f;
+	float uvTransformX = 4.0f - 2.0f;
+	float uvTransformY = 3.0f;
+	// TODO fix scalling
 	//x,y,z, s,t, nx,ny,nz
 	vertices = { {
+			0.0f, -w / 2.0f,  h / 2.0f, uvScaling* uvTransformX, uvScaling * (1.0f + uvTransformY), -1.0f, 0.0f, 0.0f,
+			0.0f, -w / 2.0f, -h / 2.0f, uvScaling* uvTransformX, uvScaling* uvTransformY, -1.0f, 0.0f, 0.0f,
+			0.0f,  w / 2.0f, -h / 2.0f, uvScaling* (1.0f + uvTransformX), uvScaling* uvTransformY, -1.0f, 0.0f, 0.0f,
+
+			0.0f, -w / 2.0f,  h / 2.0f, uvScaling* uvTransformX, uvScaling* (1.0f + uvTransformY), -1.0f, 0.0f, 0.0f,
+			0.0f,  w / 2.0f, -h / 2.0f, uvScaling* (1.0f + uvTransformX), uvScaling* uvTransformY, -1.0f, 0.0f, 0.0f,
+			0.0f,  w / 2.0f,  h / 2.0f, uvScaling* (1.0f + uvTransformX), uvScaling* (1.0f + uvTransformY), -1.0f, 0.0f, 0.0f
+	} };
+
+	/*vertices = { {
 			0.0f, -w / 2.0f,  h / 2.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
 			0.0f, -w / 2.0f, -h / 2.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
 			0.0f,  w / 2.0f, -h / 2.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -11,7 +25,7 @@ BillboardMesh::BillboardMesh(float w, float h) {
 			0.0f, -w / 2.0f,  h / 2.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
 			0.0f,  w / 2.0f, -h / 2.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
 			0.0f,  w / 2.0f,  h / 2.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f
-	} };
+	} };*/
 
 	vertexCount = 6;
 	glCreateBuffers(1, &VBO);

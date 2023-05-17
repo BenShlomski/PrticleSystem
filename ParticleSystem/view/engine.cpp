@@ -88,7 +88,7 @@ void Engine::createModels() {
 	//cubeInfo.preTransform = 0.2f * glm::mat4(1.0);
 	//cubeModel = new ObjMesh(&cubeInfo);
 	//medkitMesh = new BillboardMesh(0.3f, 0.25f);
-	lightMesh = new BillboardMesh(0.2f, 0.1f);
+	lightMesh = new BillboardMesh(0.1f, 0.1f);
 }
 
 void Engine::createMaterials() {

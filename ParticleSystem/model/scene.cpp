@@ -13,6 +13,7 @@ Scene::Scene() {
 	cube = new Cube(&cubeInfo);
 
 	// TODO find light color and scale settings. also some way that is not absoulutly awful to set the material.
+	// update: scale is in engine.CreateMeshes. of course.
 	BrightbillboardCreateInfo lightInfo;
 	lightInfo.color = glm::vec3(1, 1, 1);
 	lightInfo.position = glm::vec3(1, 0, 1.0);
