@@ -9,13 +9,11 @@
 #include <math.h>
 #include <cstdlib>
 #include "Particle.h"
-#include "BVH.h"
+
 
 #define _CRT_SECURE_NO_WARNINGS
 
-constexpr auto PARTICLE_COUNT = 400;
-constexpr auto USE_DEFAULT_COLLISION = false;
-constexpr auto SHOW_BVH = false;
+constexpr auto PARTICLE_COUNT = 200;
 
 constexpr auto CIRCLE_VERTECIES = 32;
 constexpr auto SCREEN_WIDTH = 1920;
@@ -37,8 +35,6 @@ void defaultCollisionHandle(Particle* particles, size_t particleCount);
 
 void drawParticles(Particle* particles, size_t particleCount);
 
-void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves);
-
 void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfSides);
 
 void draweRectangle(Coordinate a, Coordinate b, size_t scalingFactor);
@@ -53,15 +49,11 @@ int main(void)
     GLFWwindow* window;
     Particle* particles = new Particle[PARTICLE_COUNT];
 
-    // randomize particles TODO: maybey move this to a different function
+    // randomize particles
     for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particles[i].randomizeParticle(5, 15, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {90, 90, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(15, 30, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {900, 900, 0}, {0, 0, 0});
     }
-
-    // setting up initial bounding volume hiarchy
-    BVH bvh = BVH();
-    bvh.Update(particles, PARTICLE_COUNT);
 
     // randomize seed
     srand(time(NULL));
@@ -129,31 +121,13 @@ int main(void)
             lastTime += 1.0;
         }
 
-        /*TGAFILE image;
-        LoadTGAFile("C:\\Users\\Yonatan\\source\\repos\\ParticleSystem\\flipbooks\\Explosion02_5x5.tga", &image);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.imageWidth, image.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image.imageData);
-        free(image.imageData);*/
-
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;
         previousFrameTime = currentTime;
         updateParticles(particles, PARTICLE_COUNT, timeStep);
 
-        if (USE_DEFAULT_COLLISION)
-        {
-            defaultCollisionHandle(particles, PARTICLE_COUNT);
-        }
-        else
-        {
-            // update bounding volume hiarchy
-            bvh.Update(particles, PARTICLE_COUNT);
-            bvh.HandleCollision();
-        }
-
         // render
         drawParticles(particles, PARTICLE_COUNT);
-        if (SHOW_BVH)
-            drawBVH(bvh.GetRoot(), bvh.GetNodeCount(), true);
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -196,20 +170,6 @@ void drawParticles(Particle* particles, size_t particleCount)
 
         glColor3ub(particle.getColor().x, particle.getColor().y, particle.getColor().z); // set circle color
         drawCircle(particle.getPosition().x, particle.getPosition().y, particle.getPosition().z, particle.getRadius(), CIRCLE_VERTECIES);
-    }
-}
-
-void drawBVH(BVHNode* root, size_t nodesUsed, bool onlyLeaves)
-{
-    for (size_t i = 0; i < nodesUsed; i++)
-    {
-        BVHNode node = root[i];
-
-        if (node.isLeaf() || !onlyLeaves)
-        {
-            glColor3ub(255 * node.isLeaf(), 255, 255);
-            draweRectangle(node.aabbMin, node.aabbMax, 50 * (nodesUsed - i) / nodesUsed);
-        }
     }
 }
 

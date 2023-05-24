@@ -49,6 +49,7 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 	m_position.y += m_velocity.y * timeStep;
 	m_position.z += m_velocity.z * timeStep;
 
+	return;
 	// edge detection
 	if (m_position.x > boundingBoxTopRightPoint.x)
 	{
