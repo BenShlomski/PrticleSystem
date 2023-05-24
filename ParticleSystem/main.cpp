@@ -13,7 +13,7 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-constexpr auto PARTICLE_COUNT = 200;
+constexpr auto PARTICLE_COUNT = 2000;
 
 constexpr auto CIRCLE_VERTECIES = 32;
 constexpr auto SCREEN_WIDTH = 1920;
@@ -31,8 +31,6 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat z, GLfloat radius, GLint numberOfS
 void draweRectangle(Coordinate a, Coordinate b, size_t scalingFactor);
 
 void processInput(GLFWwindow* window);
-
-bool LoadTGAFile(const char* filename, TGAFILE* tgaFile);
 
 
 int main(void)
@@ -232,139 +230,3 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
-
-bool LoadTGAFile(const char* filename, TGAFILE* tgaFile)
-{
-    FILE* filePtr;
-    unsigned char ucharBad;
-    short int sintBad;
-    long imageSize;
-    int colorMode;
-    unsigned char colorSwap;
-
-    // Open the TGA file.
-    fopen_s(&filePtr, filename, "rb");
-    if (filePtr == NULL)
-    {
-        return false;
-    }
-
-    // Read the two first bytes we don't need.
-    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-
-    // Which type of image gets stored in imageTypeCode.
-    fread(&tgaFile->imageTypeCode, sizeof(unsigned char), 1, filePtr);
-
-    // For our purposes, the type code should be 2 (uncompressed RGB image)
-    // or 3 (uncompressed black-and-white images).
-    if (tgaFile->imageTypeCode != 2 && tgaFile->imageTypeCode != 3)
-    {
-        fclose(filePtr);
-        return false;
-    }
-
-    // Read 13 bytes of data we don't need.
-    fread(&sintBad, sizeof(short int), 1, filePtr);
-    fread(&sintBad, sizeof(short int), 1, filePtr);
-    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-    fread(&sintBad, sizeof(short int), 1, filePtr);
-    fread(&sintBad, sizeof(short int), 1, filePtr);
-
-    // Read the image's width and height.
-    fread(&tgaFile->imageWidth, sizeof(short int), 1, filePtr);
-    fread(&tgaFile->imageHeight, sizeof(short int), 1, filePtr);
-
-    // Read the bit depth.
-    fread(&tgaFile->bitCount, sizeof(unsigned char), 1, filePtr);
-
-    // Read one byte of data we don't need.
-    fread(&ucharBad, sizeof(unsigned char), 1, filePtr);
-
-    // Color mode -> 3 = BGR, 4 = BGRA.
-    colorMode = tgaFile->bitCount / 8;
-    imageSize = tgaFile->imageWidth * tgaFile->imageHeight * colorMode;
-
-    // Allocate memory for the image data.
-    tgaFile->imageData = (unsigned char*)malloc(sizeof(unsigned char) * imageSize);
-
-    // Read the image data.
-    fread(tgaFile->imageData, sizeof(unsigned char), imageSize, filePtr);
-
-    // Change from BGR to RGB so OpenGL can read the image data.
-    for (int imageIdx = 0; imageIdx < imageSize; imageIdx += colorMode)
-    {
-        colorSwap = tgaFile->imageData[imageIdx];
-        tgaFile->imageData[imageIdx] = tgaFile->imageData[imageIdx + 2];
-        tgaFile->imageData[imageIdx + 2] = colorSwap;
-    }
-
-    fclose(filePtr);
-    return true;
-}
-//
-//
-//int main(int argc, char** argv)
-//{
-//    //create GL context
-//    GLFWwindow* window;
-//    
-//    // Initialize the library
-//    if (!glfwInit())
-//    {
-//        return -1;
-//    }
-//    
-//    // Create a windowed mode window and its OpenGL context
-//    window = glfwCreateWindow(1920, 1080, "MainWindow", NULL, NULL);
-//    
-//    if (!window)
-//    {
-//        glfwTerminate();
-//        return -1;
-//    }
-//    
-//    // Make the window's context current
-//    glfwMakeContextCurrent(window);
-//    
-//    //Load GLAD so it configures OpenGL
-//    gladLoadGL();
-//
-//    TGAFILE image;
-//    LoadTGAFile("C:/Users/Yonatan/source/repos/ParticleSystem/flipbooks/Explosion02_5x5.tga", &image);
-//
-//    //upload to GPU texture
-//    GLuint tex;
-//    glGenTextures(1, &tex);
-//    glBindTexture(GL_TEXTURE_2D, tex);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 8, 8, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, image.imageData);
-//    glBindTexture(GL_TEXTURE_2D, 0);
-//
-//    //match projection to window resolution (could be in reshape callback)
-//    glMatrixMode(GL_PROJECTION);
-//    glOrtho(0, 1920, 0, 1080, -1, 1);
-//    glMatrixMode(GL_MODELVIEW);
-//
-//    //clear and draw quad with texture (could be in display callback)
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    glBindTexture(GL_TEXTURE_2D, tex);
-//    glEnable(GL_TEXTURE_2D);
-//    glBegin(GL_QUADS);
-//    glTexCoord2i(0, 0); glVertex2i(100, 100);
-//    glTexCoord2i(0, 1); glVertex2i(100, 500);
-//    glTexCoord2i(1, 1); glVertex2i(500, 500);
-//    glTexCoord2i(1, 0); glVertex2i(500, 100);
-//    glEnd();
-//    glDisable(GL_TEXTURE_2D);
-//    glBindTexture(GL_TEXTURE_2D, 0);
-//    
-//    glfwSwapBuffers(window);
-//    free(image.imageData);
-//
-//    getchar(); //pause so you can see what just happened
-//    //System("pause"); //I think this works on windows
-//
-//    return 0;
-//}
