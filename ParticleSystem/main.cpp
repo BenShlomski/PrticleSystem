@@ -19,15 +19,6 @@ constexpr auto CIRCLE_VERTECIES = 32;
 constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
 
-typedef struct
-{
-    unsigned char imageTypeCode;
-    short int imageWidth;
-    short int imageHeight;
-    unsigned char bitCount;
-    unsigned char* imageData;
-} TGAFILE;
-
 
 void updateParticles(Particle* particles, size_t particleCount, float timeStep);
 
