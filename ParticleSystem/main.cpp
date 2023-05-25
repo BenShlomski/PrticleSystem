@@ -105,11 +105,6 @@ int main(void)
             lastTime += 1.0;
         }
 
-        /*TGAFILE image;
-        LoadTGAFile("C:\\Users\\Yonatan\\source\\repos\\ParticleSystem\\flipbooks\\Explosion02_5x5.tga", &image);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.imageWidth, image.imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image.imageData);
-        free(image.imageData);*/
-
         // change particle position and velocity
         timeStep = currentTime - previousFrameTime;
         previousFrameTime = currentTime;
@@ -135,6 +130,14 @@ void updateParticles(Particle* particles, size_t particleCount, float timeStep)
     for (size_t i = 0; i < particleCount; i++)
     {
         particles[i].update(timeStep, { 0, 0, 0 }, {SCREEN_WIDTH, SCREEN_HEIGHT, 0});
+    }
+
+    for (size_t i = 0; i < particleCount; i++)
+    {
+        for (size_t j = 0; j < particleCount; j++)
+        {
+            particles[i].handleCollision(particles[j]);
+        }
     }
 }
 
