@@ -138,12 +138,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\glad.c" />
-    <ClCompile Include="BVH.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BVH.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Particle.h" />
   </ItemGroup>

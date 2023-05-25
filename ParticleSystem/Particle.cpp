@@ -53,32 +53,26 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 	if (m_position.x > boundingBoxTopRightPoint.x)
 	{
 		m_velocity.x *= -1;
-		m_position.x = 2 * boundingBoxTopRightPoint.x - m_position.x;
 	}
 	if (m_position.x < boundingBoxBottomLeftPoint.x)
 	{
 		m_velocity.x *= -1;
-		m_position.x = 2 * boundingBoxBottomLeftPoint.x - m_position.x;
 	}
 	if (m_position.y > boundingBoxTopRightPoint.y)
 	{
 		m_velocity.y *= -1;
-		m_position.y = 2 * boundingBoxTopRightPoint.y - m_position.y;
 	}
 	if (m_position.y < boundingBoxBottomLeftPoint.y)
 	{
 		m_velocity.y *= -1;
-		m_position.y = 2 * boundingBoxBottomLeftPoint.y - m_position.y;
 	}
 	if (m_position.z > boundingBoxTopRightPoint.z)
 	{
 		m_velocity.z *= -1;
-		m_position.z = 2 * boundingBoxTopRightPoint.z - m_position.z;
 	}
 	if (m_position.z < boundingBoxBottomLeftPoint.z)
 	{
 		m_velocity.z *= -1;
-		m_position.z = 2 * boundingBoxBottomLeftPoint.z - m_position.z;
 	}
 }
 
