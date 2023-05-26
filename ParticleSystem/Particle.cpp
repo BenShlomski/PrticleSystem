@@ -50,41 +50,41 @@ void Particle::update(float timeStep, Coordinate boundingBoxBottomLeftPoint, Coo
 	m_position.z += m_velocity.z * timeStep;
 
 	// edge detection
-	if (m_position.x > boundingBoxTopRightPoint.x)
+	if (m_position.x > boundingBoxTopRightPoint.x - m_radius)
 	{
 		m_velocity.x *= -1;
-		m_position.x = 2 * boundingBoxTopRightPoint.x - m_position.x;
+		m_position.x = 2 * (boundingBoxTopRightPoint.x - m_radius) - m_position.x;
 	}
-	if (m_position.x < boundingBoxBottomLeftPoint.x)
+	if (m_position.x < boundingBoxBottomLeftPoint.x + m_radius)
 	{
 		m_velocity.x *= -1;
-		m_position.x = 2 * boundingBoxBottomLeftPoint.x - m_position.x;
+		m_position.x = 2 * (boundingBoxBottomLeftPoint.x + m_radius) - m_position.x;
 	}
-	if (m_position.y > boundingBoxTopRightPoint.y)
+	if (m_position.y > boundingBoxTopRightPoint.y - m_radius)
 	{
 		m_velocity.y *= -1;
-		m_position.y = 2 * boundingBoxTopRightPoint.y - m_position.y;
+		m_position.y = 2 * (boundingBoxTopRightPoint.y - m_radius) - m_position.y;
 	}
-	if (m_position.y < boundingBoxBottomLeftPoint.y)
+	if (m_position.y < boundingBoxBottomLeftPoint.y + m_radius)
 	{
 		m_velocity.y *= -1;
-		m_position.y = 2 * boundingBoxBottomLeftPoint.y - m_position.y;
+		m_position.y = 2 * (boundingBoxBottomLeftPoint.y + m_radius) - m_position.y;
 	}
-	if (m_position.z > boundingBoxTopRightPoint.z)
+	/*if (m_position.z > boundingBoxTopRightPoint.z - m_radius)
 	{
 		m_velocity.z *= -1;
-		m_position.z = 2 * boundingBoxTopRightPoint.z - m_position.z;
+		m_position.z = 2 * (boundingBoxTopRightPoint.z - m_radius) - m_position.z;
 	}
-	if (m_position.z < boundingBoxBottomLeftPoint.z)
+	if (m_position.z < boundingBoxBottomLeftPoint.z + m_radius)
 	{
 		m_velocity.z *= -1;
-		m_position.z = 2 * boundingBoxBottomLeftPoint.z - m_position.z;
-	}
+		m_position.z = 2 * (boundingBoxBottomLeftPoint.z + m_radius) - m_position.z;
+	}*/
 }
 
 void Particle::handleCollision(Particle& particle)
 {
-	float energyConservationPersentege = 0.9;
+	float energyConservationPersentege = 1.0f;
 	Coordinate particlePosition = particle.getPosition();
 	//std::cout << particle.getPosition().x << ", " << m_position.x << " ";
 
@@ -109,12 +109,12 @@ void Particle::handleCollision(Particle& particle)
 		float dx = m_position.x - particlePosition.x;
 		float dy = m_position.y - particlePosition.y;
 		float dz = m_position.z - particlePosition.z;
-		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 }) * (1.0/energyConservationPersentege);
+		float directionVectorScale = Coordinate({ dx, dy, dz }).distance({ 0,0,0 }) * (1.0f/energyConservationPersentege);
 		Coordinate directionVector = { dx / directionVectorScale,dy / directionVectorScale,dz / directionVectorScale };
 
 		// calculating new speed after colission
-		particle1Velocity = (particle1Velocity * (m_mass - particle.getMass()) + 2 * particle.getMass() * particle2Velocity) / (m_mass + particle.getMass());
-		particle2Velocity = (particle2Velocity * (particle.getMass() - m_mass) + 2 * m_mass * tempVelocity) / (m_mass + particle.getMass());
+		particle1Velocity = (particle1Velocity * (m_mass - particle.getMass()) + 2.0f * particle.getMass() * particle2Velocity) / (m_mass + particle.getMass());
+		particle2Velocity = (particle2Velocity * (particle.getMass() - m_mass) + 2.0f * m_mass * tempVelocity) / (m_mass + particle.getMass());
 
 		//std::cout << directionVector.x << ", " << directionVector.y << ", " << directionVector.z << " - " << m_color.x << " - " << m_collidedOnCurrentFrame << std::endl;
 

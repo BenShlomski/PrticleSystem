@@ -12,14 +12,15 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-constexpr auto PARTICLE_COUNT = 400;
+constexpr auto PARTICLE_COUNT = 9;
+constexpr auto FULL_SCREEN = true;
 
 constexpr auto CIRCLE_VERTECIES = 32;
 constexpr auto SCREEN_WIDTH = 1920;
 constexpr auto SCREEN_HEIGHT = 1080;
 
 
-void updateParticles(Particle* particles, size_t particleCount, float timeStep);
+void updateParticles(Particle* particles, size_t particleCount, double timeStep);
 
 void drawParticles(Particle* particles, size_t particleCount);
 
@@ -36,7 +37,7 @@ int main(void)
     // randomize particles
     for (size_t i = 0; i < PARTICLE_COUNT; i++)
     {
-        particles[i].randomizeParticle(5, 15, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {90, 90, 0}, {0, 0, 0});
+        particles[i].randomizeParticle(70, 100, {60, 60, 0}, {SCREEN_WIDTH - 60, SCREEN_HEIGHT - 60, 0}, {900, 90, 0}, {0, 0, 0});
     }
 
     // randomize seed
@@ -49,7 +50,13 @@ int main(void)
     }
 
     // Create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "MainWindow", NULL, NULL);
+    GLFWmonitor* monitor = NULL;
+    if (FULL_SCREEN)
+    {
+        monitor = glfwGetPrimaryMonitor();
+    }
+
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "MainWindow", monitor, NULL);
 
     if (!window)
     {
@@ -72,11 +79,12 @@ int main(void)
 
     // disable v-sync
     glfwSwapInterval(0);
+    
 
     // fps variables
-    float lastTime = glfwGetTime();
-    float timeStep = 0;
-    float previousFrameTime = lastTime;
+    double lastTime = glfwGetTime();
+    double timeStep = 0;
+    double previousFrameTime = lastTime;
     int nbFrames = 0;
 
     // Loop until the user closes the window
@@ -86,8 +94,8 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Measure speed
-        float currentTime = glfwGetTime();
-        float timeDifference = currentTime - lastTime;
+        double currentTime = glfwGetTime();
+        double timeDifference = currentTime - lastTime;
         nbFrames++;
 
         if (timeDifference >= 1.0)
@@ -96,7 +104,7 @@ int main(void)
 
             // display to window and reset timer
             std::string ms = std::to_string(timeStep);
-            std::string fps = std::to_string((float)nbFrames / timeDifference);
+            std::string fps = std::to_string((double)nbFrames / timeDifference);
 
             std::string windowTitle = "ms/frame: " + ms + "; fps: " + fps;
             glfwSetWindowTitle(window, windowTitle.c_str());
@@ -125,7 +133,7 @@ int main(void)
     return 0;
 }
 
-void updateParticles(Particle* particles, size_t particleCount, float timeStep)
+void updateParticles(Particle* particles, size_t particleCount, double timeStep)
 {
     for (size_t i = 0; i < particleCount; i++)
     {
